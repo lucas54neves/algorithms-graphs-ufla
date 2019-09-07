@@ -9,6 +9,8 @@ Grupo:
 Data: 06/09/2019  
 '''
 
+from collections import deque
+
 class Vertice:
     def __init__(self, x):
         self.id = x
@@ -66,21 +68,25 @@ def leGrafo():
     
     # Le todos os vertices adjacentes e guarda na lista
     linha = arquivo.readline()
+
     while linha:
         valores = linha.split()
         
         # Pega o vertice que vai ser a posicao na lista
         # Os vertices seguintes sao adjacentes a esse vertice
-        vertice = int(valores.pop(0))
+        vertice = Vertice(int(valores.pop(0)))
+        print(vertice.get_id())
         
         while valores != []:
             adjacente = valores.pop(0)
             if adjacente != '-':
-                lista[vertice].append(int(adjacente))
+                lista[vertice.get_id()].append(Vertice(int(adjacente)))
         
         linha = arquivo.readline()
     
-    return lista
+    teste = Vertice(0)
+    #abordagem1()
+    abordagem2(lista, teste)
     
 ## Imprime os vertices dominantes usando DFS
 #def abordagem1(n, Adj, r):
@@ -101,15 +107,34 @@ def leGrafo():
                 ##p.desempilha()
     
 
-## Imprime os vertices dominantes usando BFS
-#def abordagem2():
-
+# Imprime os vertices dominantes usando BFS
+def abordagem2(lista, fonte):
+    fonte.set_cor("cinza")
+    fonte.set_distancia(0)
+    
+    print(fonte.get_id())
+    q = deque()
+    
+    q.append(Vertice(0))
+    
+    while not q == []:
+        u = q.popleft()
+        
+        i = 0
+        for vertice in lista[u.get_id()]:
+            v = lista[u.get_id()][i]
+            if v.get_cor() == "branco":
+                v.set_cor("cinza")
+                v.set_distancia(v.get_distancia()+1)
+                v.set_predecessor = u
+                q.append(v)
+            i = i + 1
+        
+        u.set_cor("preto")
+    
 # Funcao principal
 def main():
-    lista = leGrafo()
-    
-    #abordagem1()
-    #abordagem2()
+    leGrafo()
 
 if __name__ == "__main__":
     main()
