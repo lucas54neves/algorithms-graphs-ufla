@@ -4,8 +4,8 @@ GCC218 - 2019/02
 Atividade: 
 Grupo:
     Lucas Neves, 14A, 201720357
-    Davi Horner, 10A
-    Thiago Luigi, 10A
+    Davi Horner, 10A, 201720368
+    Thiago Luigi, 10A, 201720364
 Data: 06/09/2019  
 '''
 
@@ -52,7 +52,7 @@ def leGrafo():
         
         linha = arquivo.readline()
     
-    print(lista)
+    return lista
     
 ## Imprime os vertices dominantes usando DFS
 #def abordagem1(n, Adj, r):
@@ -75,12 +75,13 @@ def leGrafo():
 
 ## Imprime os vertices dominantes usando BFS
 #def abordagem2():
+
+# Funcao principal
+def main():
+    lista = leGrafo()
     
+    #abordagem1()
+    #abordagem2()
 
-#abordagem1()
-#abordagem2()
-
-
-arquivo = open('ativ1_instance.txt', 'r')
-    
-leGrafo()
+if __name__ == "__main__":
+    main()
