@@ -17,6 +17,7 @@ class Vertice:
         self.cor = "branco"
         self.distancia = float("inf")
         self.predecessor = None
+        self.dominante = None
     
     def set_cor(self, nova_cor):
         self.cor = nova_cor
@@ -26,6 +27,9 @@ class Vertice:
     
     def set_predecessor(self, novo_predecessor):
         self.predecessor = novo_predecessor
+    
+    def set_dominante(self, novo_dominante):
+        self.dominante = novo_dominante
     
     def get_id(self):
         return self.id
@@ -38,6 +42,9 @@ class Vertice:
     
     def get_predecessor(self):
         return self.predecessor
+    
+    def get_dominante(self):
+        return self.dominante
 
 class Pilha(object):
     def __init__(self):
@@ -108,13 +115,16 @@ def leGrafo():
 
 # Imprime os vertices dominantes usando BFS
 def abordagem2(lista, fonte):
+    predecessores = []
+    for i in range(len(lista)):
+        predecessores.append([])
+    
     fonte.set_cor("cinza")
     fonte.set_distancia(0)
     
     q = deque()
     
     q.append(fonte)
-    print(fonte.get_distancia())
     
     while len(q) > 0:
         u = q.popleft()
@@ -125,16 +135,27 @@ def abordagem2(lista, fonte):
             if v.get_cor() == "branco":
                 v.set_cor("cinza")
                 v.set_distancia(u.get_distancia()+1)
-                v.set_predecessor = u
+                v.set_predecessor(u)
+                predecessores[v.get_id()].append(u.get_id())
                 q.append(v)
             i = i + 1
         
         u.set_cor("preto")
     
-    for i in range (len(lista)):
-        for j in lista[i]:
-            print(j.get_id(), j.get_distancia())
-# Funcao principal
+    for i in range (len(predecessores)):
+        if len(predecessores[i]) > 1:
+            print('Vertice {} - Dominante {}'.format(i, i))
+        elif len(predecessores[i]) == 1:
+            print('Vertice {} - Dominante {}'.format(i, predecessores[i][0]))
+        else:
+            print('Vertice {} - Dominante nulo'.format(i))
+        
+    
+    #for i in range (len(lista)):
+        #print(i)
+        #for j in lista[i]:
+            #print(j.get_id(), j.get_predecessor().get_id())
+## Funcao principal
 def main():
     leGrafo()
 
