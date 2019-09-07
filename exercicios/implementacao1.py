@@ -11,6 +11,27 @@ Data: 06/09/2019
 
 from collections import deque
 
+class Grafo:
+    def __init__(self, n):
+        # Cria a lista de adjacencia
+        self.lista_adj = []
+        for i in range(n):
+            self.lista_adj.append([])
+        self.quantidade_vertices = n
+        # Cria a lista de vertices
+        self.lista_vertices = []
+        for i in range(n):
+            self.lista_vertices.append(Vertice(i))
+    
+    def get_lista_adj(self):
+        return self.lista_adj
+    
+    def get_quantidade_vertices(self):
+        return self.quantidade_vertices
+    
+    def get_lista_vertices(self):
+        return self.lista_vertices
+
 class Vertice:
     def __init__(self, x):
         self.id = x
@@ -18,6 +39,7 @@ class Vertice:
         self.distancia = float("inf")
         self.predecessor = None
         self.dominante = None
+        self.f = float("inf")
     
     def set_cor(self, nova_cor):
         self.cor = nova_cor
@@ -30,6 +52,9 @@ class Vertice:
     
     def set_dominante(self, novo_dominante):
         self.dominante = novo_dominante
+    
+    def set_f(self, novo_f):
+        self.f = novo_f
     
     def get_id(self):
         return self.id
@@ -45,6 +70,9 @@ class Vertice:
     
     def get_dominante(self):
         return self.dominante
+    
+    def get_f(self):
+        return self.f
 
 def leGrafo():
     arquivo = open('ativ1_instance.txt', 'r')
@@ -54,10 +82,8 @@ def leGrafo():
     linha = arquivo.readline()
     n = int(linha)
     
-    # Cria a lista de adjacencia
-    lista = []
-    for i in range(n):
-        lista.append([])
+    # Cria o grafo
+    grafo = Grafo(n)
     
     # Le todos os vertices adjacentes e guarda na lista
     linha = arquivo.readline()
@@ -72,37 +98,64 @@ def leGrafo():
         while valores != []:
             adjacente = valores.pop(0)
             if adjacente != '-':
-                lista[vertice.get_id()].append(Vertice(int(adjacente)))
+                grafo.get_lista_adj()[vertice.get_id()].append(Vertice(int(adjacente)))
         
         linha = arquivo.readline()
     
     vertice_inicial = Vertice(0)
-    #abordagem1()
-    abordagem2(lista, vertice_inicial)
+    abordagem1(grafo)
+    abordagem2(grafo, vertice_inicial)
+
+def dfs(grafo):
+    for i in range(grafo.get_quantidade_vertices()):
+        grafo.get_lista_vertices()[i].set_cor("branco")
+        grafo.get_lista_vertices()[i].set_predecessor(None)
     
-## Imprime os vertices dominantes usando DFS
-#def abordagem1(n, Adj, r):
-    ##cor = []
-    ##for i in range n:
-        ##cor.append("branco")
-    ##cor[r] = cinza
-    ##p = Pilha()
-    ##p.empilha(r)
-    ##while not p.vazia():
-        ##u = p.desempilha()
-        ##v = # proximo(Adj[u]
-        ##if v != nil:
-            ##if cor[v] == branco:
-                ##cor[v] = cinza
-                ##p.empilha(v)
-            ##else:
-                ##p.desempilha()
+    for i in range(grafo.get_quantidade_vertices()):
+        if grafo.get_lista_vertices()[i].get_cor() == "branco":
+            dfsVisit(grafo, grafo.get_lista_vertices()[i].get_id())
     
+def dfsVisit(grafo, id_vertice):
+    global tempo
+    tempo = tempo + 1
+    
+    grafo.get_lista_vertices()[id_vertice].set_distancia(tempo)
+    grafo.get_lista_vertices()[id_vertice].set_cor("cinza")
+    
+    for i in range(len(grafo.get_lista_adj()[id_vertice])):
+        # Pega o id do vertice adjacente e confere os dados desse vertice na lista de adjacencia
+        if grafo.get_lista_vertices()[grafo.get_lista_adj()[id_vertice][i].get_id()].get_cor() == "branco":
+            grafo.get_lista_vertices()[grafo.get_lista_adj()[id_vertice][i].get_id()].set_predecessor(grafo.get_lista_vertices()[id_vertice].get_id())
+            dfsVisit(grafo, grafo.get_lista_vertices()[grafo.get_lista_adj()[id_vertice][i].get_id()].get_id())
+    
+    grafo.get_lista_vertices()[id_vertice].set_cor("preto")
+    tempo = tempo + 1
+    grafo.get_lista_vertices()[id_vertice].set_f(tempo)
+
+# Imprime os vertices dominantes usando DFS
+def abordagem1(grafo):
+    dfs(grafo)
+    
+    print("Abordagem 1 - DFS")
+    #for i in range(grafo.get_quantidade_vertices()):
+        #print(grafo.get_lista_vertices()[i].get_distancia(), grafo.get_lista_vertices()[i].get_f())
+    
+    i = 0
+    while i < (grafo.get_quantidade_vertices() - 1):
+        j = i + 1
+        while j < (grafo.get_quantidade_vertices()):
+            if grafo.get_lista_vertices()[i].get_distancia() < grafo.get_lista_vertices()[j].get_distancia() and grafo.get_lista_vertices()[i].get_f() > grafo.get_lista_vertices()[j].get_f():
+                grafo.get_lista_vertices()[j].set_dominante(i)
+            j = j + 1
+        i = i + 1
+    
+    for k in range(grafo.get_quantidade_vertices()):
+        print("Vertice {} - Dominante {}".format(grafo.get_lista_vertices()[k].get_id(), grafo.get_lista_vertices()[k].get_dominante()))
 
 # Imprime os vertices dominantes usando BFS
-def abordagem2(lista, fonte):
+def abordagem2(grafo, fonte):
     predecessores = []
-    for i in range(len(lista)):
+    for i in range(grafo.get_quantidade_vertices()):
         predecessores.append([])
     
     fonte.set_cor("cinza")
@@ -116,8 +169,8 @@ def abordagem2(lista, fonte):
         u = q.popleft()
         
         i = 0
-        for vertice in lista[u.get_id()]:
-            v = lista[u.get_id()][i]
+        for vertice in grafo.get_lista_adj()[u.get_id()]:
+            v = grafo.get_lista_adj()[u.get_id()][i]
             if v.get_cor() == "branco":
                 v.set_cor("cinza")
                 v.set_distancia(u.get_distancia()+1)
@@ -128,6 +181,7 @@ def abordagem2(lista, fonte):
         
         u.set_cor("preto")
     
+    print("Abordagem 2 - BFS")
     for i in range (len(predecessores)):
         if len(predecessores[i]) > 1:
             print('Vertice {} - Dominante {}'.format(i, i))
@@ -141,4 +195,5 @@ def main():
     leGrafo()
 
 if __name__ == "__main__":
+    tempo = 0
     main()
