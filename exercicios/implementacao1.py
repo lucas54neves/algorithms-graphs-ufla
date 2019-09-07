@@ -75,7 +75,6 @@ def leGrafo():
         # Pega o vertice que vai ser a posicao na lista
         # Os vertices seguintes sao adjacentes a esse vertice
         vertice = Vertice(int(valores.pop(0)))
-        print(vertice.get_id())
         
         while valores != []:
             adjacente = valores.pop(0)
@@ -112,12 +111,12 @@ def abordagem2(lista, fonte):
     fonte.set_cor("cinza")
     fonte.set_distancia(0)
     
-    print(fonte.get_id())
     q = deque()
     
-    q.append(Vertice(0))
+    q.append(fonte)
+    print(fonte.get_distancia())
     
-    while not q == []:
+    while len(q) > 0:
         u = q.popleft()
         
         i = 0
@@ -125,13 +124,16 @@ def abordagem2(lista, fonte):
             v = lista[u.get_id()][i]
             if v.get_cor() == "branco":
                 v.set_cor("cinza")
-                v.set_distancia(v.get_distancia()+1)
+                v.set_distancia(u.get_distancia()+1)
                 v.set_predecessor = u
                 q.append(v)
             i = i + 1
         
         u.set_cor("preto")
     
+    for i in range (len(lista)):
+        for j in lista[i]:
+            print(j.get_id(), j.get_distancia())
 # Funcao principal
 def main():
     leGrafo()
