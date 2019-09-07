@@ -46,20 +46,6 @@ class Vertice:
     def get_dominante(self):
         return self.dominante
 
-class Pilha(object):
-    def __init__(self):
-        self.dados = []
- 
-    def empilha(self, elemento):
-        self.dados.append(elemento)
- 
-    def desempilha(self):
-        if not self.vazia():
-            return self.dados.pop(-1)
- 
-    def vazia(self):
-        return len(self.dados) == 0
-
 def leGrafo():
     arquivo = open('ativ1_instance.txt', 'r')
     
@@ -90,9 +76,9 @@ def leGrafo():
         
         linha = arquivo.readline()
     
-    teste = Vertice(0)
+    vertice_inicial = Vertice(0)
     #abordagem1()
-    abordagem2(lista, teste)
+    abordagem2(lista, vertice_inicial)
     
 ## Imprime os vertices dominantes usando DFS
 #def abordagem1(n, Adj, r):
@@ -149,13 +135,8 @@ def abordagem2(lista, fonte):
             print('Vertice {} - Dominante {}'.format(i, predecessores[i][0]))
         else:
             print('Vertice {} - Dominante nulo'.format(i))
-        
-    
-    #for i in range (len(lista)):
-        #print(i)
-        #for j in lista[i]:
-            #print(j.get_id(), j.get_predecessor().get_id())
-## Funcao principal
+
+# Funcao principal
 def main():
     leGrafo()
 
