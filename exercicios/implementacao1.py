@@ -1,7 +1,7 @@
 '''
 Resposta em Python
 GCC218 - 2019/02
-Atividade: 
+Atividade: Implementacao 1
 Grupo:
     Lucas Neves, 14A, 201720357
     Davi Horner, 10A, 201720368
@@ -38,6 +38,7 @@ class Vertice:
         self.cor = "branco"
         self.distancia = float("inf")
         self.predecessor = None
+        self.dominante = None
         self.f = float("inf")
     
     def set_cor(self, nova_cor):
@@ -48,6 +49,9 @@ class Vertice:
     
     def set_predecessor(self, novo_predecessor):
         self.predecessor = novo_predecessor
+    
+    def set_dominante(self, novo_dominante):
+        self.dominante = novo_dominante
     
     def set_f(self, novo_f):
         self.f = novo_f
@@ -63,6 +67,9 @@ class Vertice:
     
     def get_predecessor(self):
         return self.predecessor
+    
+    def get_dominante(self):
+        return self.dominante
     
     def get_f(self):
         return self.f
@@ -118,6 +125,7 @@ def dfsVisit(grafo, id_vertice):
         # Pega o id do vertice adjacente e confere os dados desse vertice na lista de adjacencia
         if grafo.get_lista_vertices()[grafo.get_lista_adj()[id_vertice][i]].get_cor() == "branco":
             grafo.get_lista_vertices()[grafo.get_lista_adj()[id_vertice][i]].set_predecessor(grafo.get_lista_vertices()[id_vertice].get_id())
+            grafo.get_lista_vertices()[grafo.get_lista_adj()[id_vertice][i]].set_dominante(grafo.get_lista_vertices()[grafo.get_lista_adj()[id_vertice][i]].get_predecessor())
             dfsVisit(grafo, grafo.get_lista_vertices()[grafo.get_lista_adj()[id_vertice][i]].get_id())
     
     grafo.get_lista_vertices()[id_vertice].set_cor("preto")
@@ -152,6 +160,8 @@ def bfs(grafo, id_fonte):
                 grafo.get_lista_vertices()[v].set_cor("cinza")
                 grafo.get_lista_vertices()[v].set_distancia(grafo.get_lista_vertices()[u].get_distancia() + 1)
                 grafo.get_lista_vertices()[v].set_predecessor(u)
+                grafo.get_lista_vertices()[v].set_dominante(grafo.get_lista_vertices()[v].get_predecessor())
+                
                 q.append(v)
             
             i = i + 1
@@ -161,6 +171,10 @@ def bfs(grafo, id_fonte):
 # Imprime os vertices dominantes usando DFS
 def abordagem1(grafo):
     dfs(grafo)
+    
+    # Segundo a regra "todo vertice alcancavel a partir do vertice inicial domina a si proprio"
+    # o vertice 0 sempre vai ser alcancavel por ele mesmo
+    grafo.get_lista_vertices()[0].set_dominante(0)
     
     # Versao 1 da abordagem 1, considerava o dominado aquele que possuir um intervalo dentro do intervalo de outro vertice
     # Ou seja, o dominado tera um intervalo menor do que o do dominador
@@ -176,15 +190,19 @@ def abordagem1(grafo):
     # Versao 2 da abordagem 1, considera que o dominador e o prodecessor, pois a DFS retorna a AGM
     print("Abordagem 1 - DFS")
     for k in range(grafo.get_quantidade_vertices()):
-        print("Vertice {} - Dominante {}".format(grafo.get_lista_vertices()[k].get_id(), grafo.get_lista_vertices()[k].get_predecessor()))
+        print("Vertice {} - Dominante {}".format(grafo.get_lista_vertices()[k].get_id(), grafo.get_lista_vertices()[k].get_dominante()))
 
 # Imprime os vertices dominantes usando BFS
 def abordagem2(grafo):
     bfs(grafo, 0)
     
+    # Segundo a regra "todo vertice alcancavel a partir do vertice inicial domina a si proprio"
+    # o vertice 0 sempre vai ser alcancavel por ele mesmo
+    grafo.get_lista_vertices()[0].set_dominante(0)
+    
     print("Abordagem 2 - BFS")
     for i in range(grafo.get_quantidade_vertices()):
-        print("Vertice {} - Dominante {}".format(grafo.get_lista_vertices()[i].get_id(), grafo.get_lista_vertices()[i].get_predecessor()))
+        print("Vertice {} - Dominante {}".format(grafo.get_lista_vertices()[i].get_id(), grafo.get_lista_vertices()[i].get_dominante()))
 
 # Funcao principal
 def main():
