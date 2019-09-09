@@ -5,7 +5,13 @@ class Grafo:
         # Cria a lista de adjacencia
         self.lista_adj = []
         for i in range(n):
-            self.lista_adj.append([])
+            self.lista_adj.append([0] * n)
+        
+        # Cria a matriz de adjacencia
+        self.matriz_adj = []
+        for i in range(n):
+            self.matriz_adj.append([])
+        
         self.quantidade_vertices = n
         # Cria a lista de vertices
         self.lista_vertices = []
@@ -20,3 +26,6 @@ class Grafo:
     
     def get_lista_vertices(self):
         return self.lista_vertices
+    
+    def get_matriz_adj(self):
+        return self.matriz_adj
