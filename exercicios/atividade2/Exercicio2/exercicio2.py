@@ -50,7 +50,7 @@ def leitura_arquivo(nome_arquivo):
     
     return grafo
 
-grafo = leitura_arquivo("grafo2.txt")
+grafo = leitura_arquivo("grafo1.txt")
 for i in range(grafo.get_quantidade_vertices()):
     for adjacente in grafo.get_lista_adjacencia()[i]:
         print("{} - {}".format(i, adjacente))
