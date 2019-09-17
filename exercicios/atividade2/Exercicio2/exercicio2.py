@@ -40,11 +40,9 @@ def leitura_arquivo(nome_arquivo):
     numero_vertices = int(valores[0])
     numero_arestas = int(valores[1])
 
-    #print("{} {}".format(numero_vertices, numero_arestas))
     grafo = Grafo(numero_vertices)
 
     for i in range(numero_arestas):
-        #print(i)
         linha = arquivo.readline()
         valores = linha.split()
         print("{} {}".format(int(valores[0]), int(valores[1])))
