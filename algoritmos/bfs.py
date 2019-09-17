@@ -1,3 +1,5 @@
+from collections import deque
+
 def bfs(grafo, id_fonte):
     i = 0
     while i < grafo.get_quantidade_vertices():
