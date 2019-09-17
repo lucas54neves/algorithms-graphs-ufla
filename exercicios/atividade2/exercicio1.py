@@ -18,3 +18,23 @@ class Grafo:
         self.lista_vertices = []
         for i in range(n):
             self.lista_vertices.append(Vertice(i))
+    
+    def get_lista_adjacencia(self):
+        return self.lista_adjacencia
+
+def leitura_arquivo(nome_arquivo):
+    arquivo = open(nome_arquivo, "r")
+
+    numero_vertices = int(arquivo.readline())
+    numero_arestas = int(arquivo.readline())
+    
+    grafo = Grafo(numero_vertices)
+    
+    for i in range(numero_arestas):
+        linha = arquivo.readline()
+        valores = linha.split()
+        grafo.get_lista_adjacencia()[int(valores[0])].append(int(valores[1]))
+    
+    return grafo
+
+leitura_arquivo("dados.txt")
