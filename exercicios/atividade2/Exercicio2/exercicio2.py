@@ -39,18 +39,24 @@ def leitura_arquivo(nome_arquivo):
 
     numero_vertices = int(valores[0])
     numero_arestas = int(valores[1])
-
+    
     grafo = Grafo(numero_vertices)
 
     for i in range(numero_arestas):
         linha = arquivo.readline()
         valores = linha.split()
-        print("{} {}".format(int(valores[0]), int(valores[1])))
-        grafo.get_lista_adjacencia()[int(valores[0])].append(int(valores[1]))
-    
+        
+        # Eh necessario subtrair uma unidade dos indices dos vertices
+        # Pois esse algoritmo considera que o primeiro vertice eh o vertice 0 (zero)
+        # Sendo assim, o primeiro vertice eh o vertice 0
+        # O segundo vertice eh o vertice 1
+        # O terceito vertice eh o vertice 2
+        # E assim por diante
+        grafo.get_lista_adjacencia()[int(valores[0])-1].append(int(valores[1])-1)
+        
     return grafo
 
-grafo = leitura_arquivo("grafo2.txt")
+grafo = leitura_arquivo("grafo1.txt")
 for i in range(grafo.get_quantidade_vertices()):
     for adjacente in grafo.get_lista_adjacencia()[i]:
         print("{} - {}".format(i, adjacente))
