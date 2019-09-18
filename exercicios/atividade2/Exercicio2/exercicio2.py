@@ -3,9 +3,23 @@ class Vertice:
     def __init__(self, i):
         # Indice do vertice
         self.indice = i
+        self.parentes = []
+        # Tempo de descoberta de cada vertice
+        self.tempo = -1
+        # Numero de pre-ordem minimo (Lowest preorder number)
+        self.low = float("inf")
     
     def get_indice(self):
         return self.indice
+
+    def get_parentes(self):
+        return self.parentes
+
+    def get_tempo(self):
+        return self.tempo
+    
+    def set_tempo(self, novo_tempo):
+        self.tempo = novo_tempo
 
 # Classe que representa o grafo
 class Grafo:
@@ -21,6 +35,10 @@ class Grafo:
         self.lista_vertices = []
         for i in range(n):
             self.lista_vertices.append(Vertice(i))
+
+    def adiciona_aresta(self, v, u):
+        self.lista_adjacencia[v].append(u)
+        self.lista_adjacencia[u].append(v)
     
     def get_quantidade_vertices(self):
         return self.quantidade_vertices
@@ -30,6 +48,9 @@ class Grafo:
     
     def get_lista_vertices(self):
         return self.lista_vertices
+
+def retorna_ponte(grafo, vertice1, vertice2):
+    
 
 def leitura_arquivo(nome_arquivo):
     arquivo = open(nome_arquivo, "r")
@@ -56,7 +77,12 @@ def leitura_arquivo(nome_arquivo):
         
     return grafo
 
-grafo = leitura_arquivo("grafo1.txt")
-for i in range(grafo.get_quantidade_vertices()):
-    for adjacente in grafo.get_lista_adjacencia()[i]:
-        print("{} - {}".format(i, adjacente))
+# Funcao principal
+def main():
+    grafo = leitura_arquivo("grafo1.txt")
+    for i in range(grafo.get_quantidade_vertices()):
+        for adjacente in grafo.get_lista_adjacencia()[i]:
+            print("{} - {}".format(i, adjacente))
+
+if __name__ == "__main__":
+    main()
