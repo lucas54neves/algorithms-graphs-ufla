@@ -1,25 +1,54 @@
+# Classe que representa a ponte
+class Ponte:
+    def __init__(self, u, v):
+        self.u = u
+        self.v = v
+
+    def get_v(self):
+        return self.v
+
+    def get_u(self):
+        return self.u
+
+
 # Classe que representa o vertice
 class Vertice:
     def __init__(self, i):
         # Indice do vertice
         self.indice = i
-        self.parentes = []
+        self.pai = -1
         # Tempo de descoberta de cada vertice
-        self.tempo = -1
+        self.tempo = float("inf")
         # Numero de pre-ordem minimo (Lowest preorder number)
         self.low = float("inf")
+        self.visitado = False
     
     def get_indice(self):
         return self.indice
 
-    def get_parentes(self):
-        return self.parentes
+    def get_pai(self):
+        return self.pai
+
+    def set_pai(self, padrasto):
+        self.pai = padrasto
 
     def get_tempo(self):
         return self.tempo
     
     def set_tempo(self, novo_tempo):
         self.tempo = novo_tempo
+
+    def get_low(self):
+        return self.low
+    
+    def set_low(self, novo_low):
+        self.low = novo_low
+
+    def get_visitado(self):
+        return self.visitado
+    
+    def set_visitado(self, novo_visitado):
+        self.visitado = novo_visitado
 
 # Classe que representa o grafo
 class Grafo:
@@ -35,6 +64,8 @@ class Grafo:
         self.lista_vertices = []
         for i in range(n):
             self.lista_vertices.append(Vertice(i))
+        self.tempo = 0
+        self.pontes = []
 
     def adiciona_aresta(self, v, u):
         self.lista_adjacencia[v].append(u)
@@ -49,8 +80,44 @@ class Grafo:
     def get_lista_vertices(self):
         return self.lista_vertices
 
-def retorna_ponte(grafo, vertice1, vertice2):
-    
+    def get_tempo(self):
+        return self.tempo
+
+    def set_tempo(self, novo_tempo):
+        self.tempo = novo_tempo
+
+    def get_pontes(self):
+        return self.pontes
+
+    def set_pontes(self, u, v):
+        ponte = Ponte(u, v)
+        self.pontes.append(ponte)
+
+def ponte(grafo):
+    for i in range(grafo.get_quantidade_vertices()):
+        if grafo.get_lista_vertices()[i].get_visitado() == False:
+            ponte_auxiliar(grafo, i)
+
+def ponte_auxiliar(grafo, vertice):
+    grafo.get_lista_vertices()[vertice].set_visitado(True)
+    grafo.get_lista_vertices()[vertice].set_tempo(grafo.get_tempo())
+    grafo.get_lista_vertices()[vertice].set_low(grafo.get_tempo())
+    grafo.set_tempo(grafo.get_tempo()+1)
+
+    for adjacente in grafo.get_lista_adjacencia()[vertice]:
+        if grafo.get_lista_vertices()[adjacente].get_visitado() == False:
+            grafo.get_lista_vertices()[adjacente].set_pai(vertice)
+            ponte_auxiliar(grafo, adjacente)
+            
+            grafo.get_lista_vertices()[vertice].set_low(min(grafo.get_lista_vertices()[vertice].get_low(), grafo.get_lista_vertices()[adjacente].get_low()))
+            
+            if grafo.get_lista_vertices()[adjacente].get_low() > grafo.get_lista_vertices()[vertice].get_tempo():             
+                grafo.set_pontes(vertice+1, adjacente+1)
+                print ("{} {}".format(vertice+1, adjacente+1))
+                print ("{} {}".format(adjacente+1, vertice+1))
+
+        elif adjacente != grafo.get_lista_vertices()[vertice].get_pai():
+            grafo.get_lista_vertices()[vertice].set_low(min(grafo.get_lista_vertices()[vertice].get_low(), grafo.get_lista_vertices()[adjacente].get_tempo()))
 
 def leitura_arquivo(nome_arquivo):
     arquivo = open(nome_arquivo, "r")
@@ -74,15 +141,17 @@ def leitura_arquivo(nome_arquivo):
         # O terceito vertice eh o vertice 2
         # E assim por diante
         grafo.get_lista_adjacencia()[int(valores[0])-1].append(int(valores[1])-1)
+        grafo.get_lista_adjacencia()[int(valores[1])-1].append(int(valores[0])-1)
         
     return grafo
 
+def executa(nome_arquivo):
+    grafo = leitura_arquivo(nome_arquivo)
+    ponte(grafo)
+
 # Funcao principal
 def main():
-    grafo = leitura_arquivo("grafo1.txt")
-    for i in range(grafo.get_quantidade_vertices()):
-        for adjacente in grafo.get_lista_adjacencia()[i]:
-            print("{} - {}".format(i, adjacente))
+    executa("grafo2.txt")
 
 if __name__ == "__main__":
     main()

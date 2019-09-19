@@ -49,11 +49,11 @@ class Graph:
 				under v is below u in DFS tree, then u-v is 
 				a bridge'''
 				if low[v] > disc[u]: 
-					print ("%d %d" %(u,v)) 
+					print ("P%d %d" %(u,v)) 
 	
 					
 			elif v != parent[u]: # Update low value of u for parent function calls. 
-				low[u] = min(low[u], disc[v]) 
+				low[u] = min(low[u], disc[v])
 
 
 	# DFS based function to find all bridges. It uses recursive 
@@ -75,12 +75,16 @@ class Graph:
 		
 
 # Create a graph given in the above diagram 
-g1 = Graph(5) 
-g1.addEdge(1, 0) 
-g1.addEdge(0, 2) 
-g1.addEdge(2, 1) 
-g1.addEdge(0, 3) 
-g1.addEdge(3, 4) 
+g1 = Graph(9)
+g1.addEdge(1, 2)
+g1.addEdge(1, 3)
+g1.addEdge(1, 4)
+g1.addEdge(2, 4)
+g1.addEdge(3, 4)
+g1.addEdge(4, 5)
+g1.addEdge(5, 6)
+g1.addEdge(5, 7)
+g1.addEdge(7, 6) 
 
 
 print "Bridges in first graph "
