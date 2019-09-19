@@ -1,15 +1,13 @@
-# Classe que representa a ponte
-class Ponte:
-    def __init__(self, u, v):
-        self.u = u
-        self.v = v
+class Caminho:
+    def __init__(self, origem, destino):
+        self.origem = origem
+        self.destino = destino
+    
+    def get_origem(self):
+        return self.origem
 
-    def get_v(self):
-        return self.v
-
-    def get_u(self):
-        return self.u
-
+    def get_destino(self):
+        return self.destino
 
 # Classe que representa o vertice
 class Vertice:
@@ -65,7 +63,7 @@ class Grafo:
         for i in range(n):
             self.lista_vertices.append(Vertice(i))
         self.tempo = 0
-        self.pontes = []
+        self.caminho = []
 
     def adiciona_aresta(self, v, u):
         self.lista_adjacencia[v].append(u)
@@ -86,12 +84,17 @@ class Grafo:
     def set_tempo(self, novo_tempo):
         self.tempo = novo_tempo
 
-    def get_pontes(self):
-        return self.pontes
+    def get_caminho(self):
+        return self.caminho
 
-    def set_pontes(self, u, v):
-        ponte = Ponte(u, v)
-        self.pontes.append(ponte)
+    def set_caminho(self, u, v):
+        self.caminho.append(Caminho(u, v))
+    
+    def imprime_resultado(self):
+        self.get_caminho().sort(key=lambda a: a.get_destino())
+        self.get_caminho().sort(key=lambda a: a.get_origem())
+        for j in self.get_caminho():
+            print("{} {}".format(j.get_origem(), j.get_destino()))
 
 def ponte(grafo):
     for i in range(grafo.get_quantidade_vertices()):
@@ -112,12 +115,15 @@ def ponte_auxiliar(grafo, vertice):
             grafo.get_lista_vertices()[vertice].set_low(min(grafo.get_lista_vertices()[vertice].get_low(), grafo.get_lista_vertices()[adjacente].get_low()))
             
             if grafo.get_lista_vertices()[adjacente].get_low() > grafo.get_lista_vertices()[vertice].get_tempo():             
-                grafo.set_pontes(vertice+1, adjacente+1)
-                print ("{} {}".format(vertice+1, adjacente+1))
-                print ("{} {}".format(adjacente+1, vertice+1))
+                grafo.set_caminho(adjacente+1, vertice+1)                
+                grafo.set_caminho(vertice+1, adjacente+1)                                
+            else:
+                grafo.set_caminho(vertice+1, adjacente+1)
 
         elif adjacente != grafo.get_lista_vertices()[vertice].get_pai():
             grafo.get_lista_vertices()[vertice].set_low(min(grafo.get_lista_vertices()[vertice].get_low(), grafo.get_lista_vertices()[adjacente].get_tempo()))
+            if grafo.get_lista_vertices()[vertice].get_tempo() > grafo.get_lista_vertices()[adjacente].get_tempo():
+                grafo.set_caminho(vertice+1, adjacente+1)
 
 def leitura_arquivo(nome_arquivo):
     arquivo = open(nome_arquivo, "r")
@@ -148,9 +154,13 @@ def leitura_arquivo(nome_arquivo):
 def executa(nome_arquivo):
     grafo = leitura_arquivo(nome_arquivo)
     ponte(grafo)
+    grafo.imprime_resultado()
 
 # Funcao principal
 def main():
+    print("Grafo 1")
+    executa("grafo1.txt")
+    print("Grafo 2")
     executa("grafo2.txt")
 
 if __name__ == "__main__":
