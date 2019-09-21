@@ -1,3 +1,14 @@
+'''
+Resposta em Python
+GCC218 - 2019/02
+Atividade: Implementacao 2 (Exercicio1)
+Grupo:
+    Lucas Neves, 14A, 201720357
+    Davi Horner, 10A, 201720368
+    Thiago Luigi, 10A, 201720364
+Data: 20/09/2019  
+'''
+
 from collections import deque
 
 # Classe que representa o vertice

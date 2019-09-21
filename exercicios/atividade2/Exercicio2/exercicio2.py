@@ -1,4 +1,16 @@
-class Caminho:
+'''
+Resposta em Python
+GCC218 - 2019/02
+Atividade: Implementacao 2 (Exercicio2)
+Grupo:
+    Lucas Neves, 14A, 201720357
+    Davi Horner, 10A, 201720368
+    Thiago Luigi, 10A, 201720364
+Data: 20/09/2019  
+'''
+
+# Classe que representa a aresta percorrida
+class Aresta:
     def __init__(self, origem, destino):
         self.origem = origem
         self.destino = destino
@@ -14,11 +26,13 @@ class Vertice:
     def __init__(self, i):
         # Indice do vertice
         self.indice = i
+        # Vertice "pai" do vertice durante o percuso da busca em profundidade        
         self.pai = -1
         # Tempo de descoberta de cada vertice
         self.tempo = float("inf")
         # Numero de pre-ordem minimo (Lowest preorder number)
         self.low = float("inf")
+        # Se vertice foi visitado
         self.visitado = False
     
     def get_indice(self):
@@ -63,7 +77,7 @@ class Grafo:
         for i in range(n):
             self.lista_vertices.append(Vertice(i))
         self.tempo = 0
-        self.caminho = []
+        self.Aresta = []
 
     def adiciona_aresta(self, v, u):
         self.lista_adjacencia[v].append(u)
@@ -84,23 +98,29 @@ class Grafo:
     def set_tempo(self, novo_tempo):
         self.tempo = novo_tempo
 
-    def get_caminho(self):
-        return self.caminho
+    def get_Aresta(self):
+        return self.Aresta
 
-    def set_caminho(self, u, v):
-        self.caminho.append(Caminho(u, v))
+    def set_Aresta(self, u, v):
+        self.Aresta.append(Aresta(u, v))
     
+    # Impressao do resultado
+    # Como a saida do enunciado esta em ordem crescente primeiro da origem da aresta e depois do destino
+    # A lista do caminho eh ordenada, primeiramente usando o vertice de destino como chave e depois o vertice de origem
     def imprime_resultado(self):
-        self.get_caminho().sort(key=lambda a: a.get_destino())
-        self.get_caminho().sort(key=lambda a: a.get_origem())
-        for j in self.get_caminho():
+        self.get_Aresta().sort(key=lambda a: a.get_destino())
+        self.get_Aresta().sort(key=lambda a: a.get_origem())
+        for j in self.get_Aresta():
             print("{} {}".format(j.get_origem(), j.get_destino()))
 
+# Funcao para encontrar as pontes
+# Baseado na busca em profundidade
 def ponte(grafo):
     for i in range(grafo.get_quantidade_vertices()):
         if grafo.get_lista_vertices()[i].get_visitado() == False:
             ponte_auxiliar(grafo, i)
 
+# Funcao auxiliar para encontrar as pontes
 def ponte_auxiliar(grafo, vertice):
     grafo.get_lista_vertices()[vertice].set_visitado(True)
     grafo.get_lista_vertices()[vertice].set_tempo(grafo.get_tempo())
@@ -114,28 +134,38 @@ def ponte_auxiliar(grafo, vertice):
             
             grafo.get_lista_vertices()[vertice].set_low(min(grafo.get_lista_vertices()[vertice].get_low(), grafo.get_lista_vertices()[adjacente].get_low()))
             
+            # Se for ponte, pega a aresta de ida e volta
+            # A rua continua dupla
             if grafo.get_lista_vertices()[adjacente].get_low() > grafo.get_lista_vertices()[vertice].get_tempo():             
-                grafo.set_caminho(adjacente+1, vertice+1)                
-                grafo.set_caminho(vertice+1, adjacente+1)                                
+                grafo.set_Aresta(adjacente+1, vertice+1)                
+                grafo.set_Aresta(vertice+1, adjacente+1)                                
+            # Se nao for ponte, pega a aresta de ida
+            # A rua se torna mao-unica
             else:
-                grafo.set_caminho(vertice+1, adjacente+1)
-
+                grafo.set_Aresta(vertice+1, adjacente+1)
+    
         elif adjacente != grafo.get_lista_vertices()[vertice].get_pai():
             grafo.get_lista_vertices()[vertice].set_low(min(grafo.get_lista_vertices()[vertice].get_low(), grafo.get_lista_vertices()[adjacente].get_tempo()))
+            # Se a aresta for cruzada e o vertice adjacente nao for pai do vertice, a rua se torna simples
+            # Pega a aresta de ida
             if grafo.get_lista_vertices()[vertice].get_tempo() > grafo.get_lista_vertices()[adjacente].get_tempo():
-                grafo.set_caminho(vertice+1, adjacente+1)
+                grafo.set_Aresta(vertice+1, adjacente+1)
 
+# Funcao para a leitura do arquivo
 def leitura_arquivo(nome_arquivo):
     arquivo = open(nome_arquivo, "r")
 
     linha = arquivo.readline()
     valores = linha.split()
 
+    # Pega a quantidade de vertices e de arestas
     numero_vertices = int(valores[0])
     numero_arestas = int(valores[1])
     
+    # Cria o grafo que sera usado no sistema
     grafo = Grafo(numero_vertices)
 
+    # Leitura das arestas
     for i in range(numero_arestas):
         linha = arquivo.readline()
         valores = linha.split()
@@ -148,9 +178,14 @@ def leitura_arquivo(nome_arquivo):
         # E assim por diante
         grafo.get_lista_adjacencia()[int(valores[0])-1].append(int(valores[1])-1)
         grafo.get_lista_adjacencia()[int(valores[1])-1].append(int(valores[0])-1)
-        
+    
+    # Retorna o grafo criado 
     return grafo
 
+# Funcao que executa o sistema
+# Primeiro o grafo eh lido atraves do arquivo texto
+# Depois a funcao que encontra as pontes eh executada
+# Depois o resultado eh impresso
 def executa(nome_arquivo):
     grafo = leitura_arquivo(nome_arquivo)
     ponte(grafo)
