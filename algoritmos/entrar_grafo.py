@@ -1,6 +1,6 @@
 from grafo import Grafo
 
-entrar_grafo():
+def entrar_grafo():
     quantidade_vertices = int(input("Entre com a quantidade de vertices: "))
     quantidade_arestas = int(input("Entre com a quantidade de arestas: "))
     direcional = int(input("O grafo eh direcional? [0] Nao / [1] Sim "))
@@ -17,3 +17,10 @@ entrar_grafo():
             grafo.adicionar_aresta_nao_direcional(u, v)
     
     return grafo
+
+# Funcao principal para teste
+def main():
+    entrar_grafo()
+
+if __name__ == "__main__":
+    main()
