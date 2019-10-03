@@ -32,11 +32,6 @@ def dfs_visit(grafo, indice_vertice):
 # Funcao principal para teste
 def main():
     grafo = entrar_grafo()
-    grafo.adicionar_aresta_direcional(0, 1)
-    grafo.adicionar_aresta_direcional(0, 3)
-    grafo.adicionar_aresta_direcional(1, 2)
-    grafo.adicionar_aresta_direcional(2, 3)
-    grafo.adicionar_aresta_direcional(3, 1)
     dfs(grafo)
 
 if __name__ == "__main__":
