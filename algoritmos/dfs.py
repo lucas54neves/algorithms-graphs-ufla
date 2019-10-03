@@ -1,4 +1,5 @@
 from grafo import *
+from entrar_grafo import entrar_grafo
 
 def dfs(grafo):
     for i in range(grafo.get_quantidade_vertices()):
@@ -30,7 +31,7 @@ def dfs_visit(grafo, indice_vertice):
 
 # Funcao principal para teste
 def main():
-    grafo = Grafo(4)
+    grafo = entrar_grafo()
     grafo.adicionar_aresta_direcional(0, 1)
     grafo.adicionar_aresta_direcional(0, 3)
     grafo.adicionar_aresta_direcional(1, 2)
