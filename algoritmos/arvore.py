@@ -1,4 +1,4 @@
-from grafo import Grafo
+from grafo import *
 
 def arvore_auxiliar(grafo, vertice, quantidade_vertices_bancos, tem_ciclo):
     quantidade_vertices_bancos = quantidade_vertices_bancos - 1
