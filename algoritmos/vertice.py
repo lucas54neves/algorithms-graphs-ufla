@@ -6,8 +6,8 @@ class Vertice:
         self.tempo_inicial = -1
         self.tempo_final = -1
         self.distancia = float("inf")
-        # O menor número de pré-ordem que pode ser alcançado por v utilizando
-        # arcos da arborescência e até um arco de retorno
+        # O menor numero de pre-ordem que pode ser alcancado por v utilizando
+        # arcos da arborescencia e ate um arco de retorno
         self.low = float("inf")
 
     def get_indice(self):
