@@ -1,4 +1,4 @@
-from grafo import Grafo
+from grafo import *
 
 def ponte(grafo):
     for i in range(grafo.get_quantidade_vertices()):
@@ -15,10 +15,10 @@ def ponte_auxiliar(grafo, vertice):
         if grafo.get_lista_vertices()[adjacente].get_visitado() == False:
             grafo.get_lista_vertices()[adjacente].set_pai(vertice)
             ponte_auxiliar(grafo, adjacente)
-            
+
             grafo.get_lista_vertices()[vertice].set_low(min(grafo.get_lista_vertices()[vertice].get_low(), grafo.get_lista_vertices()[adjacente].get_low()))
-            
-            if grafo.get_lista_vertices()[adjacente].get_low() > grafo.get_lista_vertices()[vertice].get_tempo():             
+
+            if grafo.get_lista_vertices()[adjacente].get_low() > grafo.get_lista_vertices()[vertice].get_tempo():
                 print("A aresta {} - {} eh ponte".format(vertice, adjacente))
 
         elif adjacente != grafo.get_lista_vertices()[vertice].get_pai():
