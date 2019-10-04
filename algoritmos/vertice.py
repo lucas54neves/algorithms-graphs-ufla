@@ -5,6 +5,7 @@ class Vertice:
         self.pai = None
         self.tempo_inicial = -1
         self.tempo_final = -1
+        self.distancia = float("inf")
     
     def get_indice(self):
         return self.indice
@@ -21,6 +22,9 @@ class Vertice:
     def get_tempo_final(self):
         return self.tempo_final
     
+    def get_distancia(self):
+        return self.distancia
+    
     def set_cor(self, nova_cor):
         self.cor = nova_cor
     
@@ -31,4 +35,7 @@ class Vertice:
         self.tempo_inicial = novo_tempo
     
     def set_tempo_final(self, novo_tempo):
-        self.tempo_final = novo_tempo 
+        self.tempo_final = novo_tempo
+    
+    def set_distancia(self, nova_distancia):
+        self.distancia = nova_distancia
