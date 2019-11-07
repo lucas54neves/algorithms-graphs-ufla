@@ -48,7 +48,11 @@ class Grafo:
         self.vertices[vertice2].adjacentes.remove(vertice1)
 
     def imprimir_resultado(self):
-        print(self.caminho_euleriano)
+        i = len(self.caminho_euleriano) - 1
+        if self.caminho_euleriano[0] == self.caminho_euleriano[i]:
+            print(self.caminho_euleriano)
+        else:
+            print("Grafo Nao Euleriano")
 
     def hierholzer(self, vertice):
         for adjacente in self.vertices[vertice].adjacentes:
