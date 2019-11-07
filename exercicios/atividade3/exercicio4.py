@@ -27,16 +27,18 @@ class Grafo:
 
         linha = arquivo.readline()
 
+        # Leitura das coordenadas das linhas de metro
         linhas = []
         while linha:
             valores = linha.split()
             linha_metro = Linha()
 
-            i = 0
-            while len(valores) > i:
-                if valores[i] != -1:
-                    linha_metro.adicionar_estacoes(Vertice(int(valores[i]), int(valores[i+1])))
-                i += 2
+            while valores:
+                coordenada_x = valores.pop(0)
+                coordenada_y = valores.pop(0)
+
+                if coordenada_x != -1 and coordenada_y != -1:
+                    linha_metro.adicionar_estacoes(Vertice(int(coordenada_x), int(coordenada_y)))
 
             linhas.append(linha_metro)
 
@@ -55,73 +57,50 @@ class Grafo:
                 linha.append(0)
             self.matriz.append(linha)
 
-        # vertices = {}
-        #
-        # vertices[0] = casa
-        #
-        # i = 1
-        # for linha in linhas:
-        #     for estacao in linha:
-        #         vertices[i] = estacao
-        #         i += 1
-        #
-        # vertices[i+1] = escola
-
-        # vertices => posicao eh chave e vertice eh valor
-        # dicionario.get(chave) = retorna valor
-        # for chave in dicionario:
-        # for valor in dicionario.values():
+        arestas = []
+        arestas.append([casa, 0])
 
         i = 1
         for linha in linhas:
             for estacao in linha.estacoes:
-                self.matriz[0][i] = self.calcular_tempo(casa, estacao, 1.7)
-                i += 1
-        self.matriz[0][self.n-1] = self.calcular_tempo(casa, escola, 1.7)
+                arestas.append([estacao, i])
+            i += 1
 
-        i = 1
-        for linha in linhas:
-            for estacao in linha.estacoes:
-                self.matriz[self.n-1][i] = self.calcular_tempo(escola, estacao, 1.7)
-                i += 1
-        self.matriz[self.n-1][0] = self.calcular_tempo(escola, casa, 1.7)
+        arestas.append([escola, 0])
 
-        i = 1
-        for linha in linhas:
-            j = i
-            for estacao1 in linha.estacoes:
-                self.matriz[i][0] = self.calcular_tempo(estacao1, casa, 1.7)
-                for estacao2 in linha.estacoes:
-                    if i < self.n and j < self.n:
-                        self.matriz[i][j] = self.calcular_tempo(estacao1, estacao2, 3.1111111)
-                    j += 1
-                self.matriz[i][self.n-1] = self.calcular_tempo(estacao1, escola, 1.7)
-                i += 1
-
-
-        # Indice da linha1
-        i = 1
-        for linha1 in linhas:
-            for estacao1 in linha1.estacoes:
-                k = 1
-                for linha2 in linhas:
-                    for estacao2 in linha1.estacoes:
-                        self.matriz[i][k] = self.calcular_tempo(estacao1, estacao2, 1.7)
-                        k += 1
-                i += 1
+        i = 0
+        for aresta1 in arestas:
+            j = 0
+            for aresta2 in arestas:
+                if aresta1[1] == 0:
+                    self.matriz[i][j] = self.calcular_tempo(aresta1[0], aresta2[0], 1.7)
+                elif aresta1[1] == aresta2[1]:
+                    self.matriz[i][j] = self.calcular_tempo(aresta1[0], aresta2[0], 3.1111111)
+                else:
+                    self.matriz[i][j] = self.calcular_tempo(aresta1[0], aresta2[0], 1.7)
+                j += 1
+            i += 1
 
     def calcular_distancias(self, vertice1, vertice2):
         return math.sqrt(math.pow((vertice1.x - vertice2.x), 2) + math.pow((vertice1.y - vertice2.y), 2))
 
     def calcular_tempo(self, vertice1, vertice2, velocidade):
-        return math.ceil(self.calcular_distancias(vertice1, vertice2) / velocidade)
+        return math.ceil((self.calcular_distancias(vertice1, vertice2) / velocidade) / 60)
 
     def imprimir_matriz(self):
         for i in range(len(self.matriz)):
             print(self.matriz[i])
 
+    def floyd_warshall(self):
+        for k in range(self.n):
+            for i in range(self.n):
+                for j in range(self.n):
+                    if self.matriz[i][j] > self.matriz[i][k] + self.matriz[k][j]:
+                        self.matriz[i][j] = self.matriz[i][k] + self.matriz[k][j]
+
 def main():
     grafo = Grafo("Ex3.txt")
+    grafo.floyd_warshall()
     grafo.imprimir_matriz()
 
 if __name__ == "__main__":
