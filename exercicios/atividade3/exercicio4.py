@@ -75,9 +75,16 @@ class Grafo:
         i = 1
         for linha in linhas:
             for estacao in linha.estacoes:
-                self.matriz[1][i] = self.calcular_tempo(casa, estacao, 1.7)
+                self.matriz[0][i] = self.calcular_tempo(casa, estacao, 1.7)
                 i += 1
-        self.matriz[1][self.n-1] = self.calcular_tempo(casa, escola, 1.7)
+        self.matriz[0][self.n-1] = self.calcular_tempo(casa, escola, 1.7)
+
+        i = 1
+        for linha in linhas:
+            for estacao in linha.estacoes:
+                self.matriz[self.n-1][i] = self.calcular_tempo(escola, estacao, 1.7)
+                i += 1
+        self.matriz[self.n-1][0] = self.calcular_tempo(escola, casa, 1.7)
 
         i = 1
         for linha in linhas:
