@@ -9,23 +9,11 @@ class Vertice:
         self.arestas = []
 
     def relax(self, aresta):
-        self.tempo = aresta.adjacente.tempo + aresta.peso
-        self.pai = adjacente
+        self.tempo = aresta[0][0].tempo + aresta[1]
+        self.pai = aresta[0]
 
     def adicionar_aresta(self, destino, peso):
-        self.arestas.append(Aresta(destino, peso))
-
-class Aresta:
-    def __init__(self, destino, peso):
-        self.destino = destino
-        self.peso = peso
-
-class Linha:
-    def __init__(self):
-        self.estacoes = []
-
-    def adicionar_estacoes(self, vertice):
-        self.estacoes.append(vertice)
+        self.arestas.append([destino, peso])
 
 class Grafo:
     def __init__(self, nome_arquivo):
@@ -44,7 +32,6 @@ class Grafo:
         i = 1
         while linha:
             valores = linha.split()
-            linha_metro = Linha()
 
             while valores:
                 coordenada_x = int(valores.pop(0))
@@ -76,20 +63,17 @@ class Grafo:
         return math.ceil((self.calcular_distancias(vertice1, vertice2) / velocidade) / 60)
 
     def imprimir_resultado(self):
-        print(self.vertices[len(self.vertices) - 1].tempo)
-
-    def dijkstra(self):
+        print(self.vertices[len(self.vertices) - 1][0].tempo)
+            
+    def bellman_ford(self):
         self.inicializar_vertices()
         
         self.vertices[0][0].tempo = 0
-
-        conjunto_q = self.vertices
         
-        while len(conjunto_q) != 0:
-            u = min(conjunto_q, key=lambda v: v[0].tempo)
-            for aresta in u[0].arestas:
-                if u[0].tempo > aresta.destino[0].tempo + aresta.peso:
-                    u[0].relax(aresta)
+        for vertice in self.vertices:
+            for aresta in vertice[0].arestas:
+                if vertice[0].tempo > aresta[0][0].tempo + aresta[1]:
+                    vertice[0].relax(aresta)
 
     def inicializar_vertices(self):
         for vertice in self.vertices:
@@ -98,7 +82,7 @@ class Grafo:
 
 def main():
     grafo = Grafo("Ex3.txt")
-    grafo.dijkstra()
+    grafo.bellman_ford()
     grafo.imprimir_resultado()
 
 if __name__ == "__main__":
