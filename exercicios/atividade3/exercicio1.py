@@ -1,54 +1,58 @@
-# Classe que representa o vertice adjacente
-class Adjacente:
+class Par:
     def __init__(self, i):
-        # Indice do vertice adjacente
-        self.indice = i
-        # Atributo que informa se a aresta foi visitada
+        self.id = i
         self.visitada = False
 
-    def get_indice(self):
-        return self.indice
-
-    def get_visitada(self):
-        return self.visitada
-
-    def visitar(self):
-        self.visitada = True
-
-# Classe que representa o grafo
 class Grafo:
-    def __init__(self, nome_arquivo):
-        arquivo = open(nome_arquivo, "r")
-        # Quantidade de vertices
-        self.quantidade_vertices = int(arquivo.readline())
-        # Lista de adjacencia dos vertices
+    def __init__(self, n):
         self.lista_adjacencia = []
-        for i in range(self.quantidade_vertices):
+        for i in range(n):
             self.lista_adjacencia.append([])
-        # Adiciona as arestas apartir do arquivo
-        for linha in arquivo:
-            valores = linha.split()
-            self.adicionar_aresta(int(valores[0]), int(valores[1]))
 
     def adicionar_aresta(self, u, v):
-        self.lista_adjacencia[u].append(Adjacente(v))
+        self.lista_adjacencia[u].append(Par(v))
 
     def hierholzer(self):
-        # Vertice inicial do algoritmo
-        # Escolhido aleatoriamente
-        vertice_inicial = random.randint(0, self.quantidade_vertices)
+        if len(self.lista_adjacencia) != 0:
+            graus = []
+            for i in range(len(self.lista_adjacencia)):
+                graus.append(len(self.lista_adjacencia[i]))
 
-        # Armazena o circuito
-        circuito = []
+            caminho_atual = []
+            circuito_euleriano = []
 
-        while circuito:
-            pass
+            caminho_atual.append(0)
+            vertice_atual = 0
 
-    # Metodo para imprimir o resultado de acordo com o que pede no enunciado
-    # O circuito euleriano ou a mensagem "Grafo Nao Euleriano"
-    def imprimir_resultado(self):
-        pass
+            while len(caminho_atual) != 0:
+                if (graus[vertice_atual] != 0):
+                    caminho_atual.append(vertice_atual)
+                    proximo_vertice = self.lista_adjacencia[vertice_atual].pop()
+                    graus[vertice_atual] -= 1
+                    vertice_atual = proximo_vertice
+                else:
+                    circuito_euleriano.append(vertice_atual)
+                    vertice_atual = caminho_atual.pop()
 
-grafo = Grafo("Ex1.txt")
-#grafo.hierholzer()
-#grafo.imprimir_resultado()
+            retorno = ""
+            i = len(circuito_euleriano) - 1
+            while i >= 0:
+                retorno += " " + str(circuito_euleriano[i])
+                i -= 1
+
+            print(retorno)
+
+grafo = Grafo(7)
+
+grafo.adicionar_aresta(0, 1)
+grafo.adicionar_aresta(0, 2)
+grafo.adicionar_aresta(1, 2)
+grafo.adicionar_aresta(1, 3)
+grafo.adicionar_aresta(1, 6)
+grafo.adicionar_aresta(2, 3)
+grafo.adicionar_aresta(2, 4)
+grafo.adicionar_aresta(2, 5)
+grafo.adicionar_aresta(2, 6)
+grafo.adicionar_aresta(4, 5)
+
+grafo.hierholzer()
