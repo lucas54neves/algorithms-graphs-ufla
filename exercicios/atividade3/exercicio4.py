@@ -34,11 +34,11 @@ class Grafo:
             linha_metro = Linha()
 
             while valores:
-                coordenada_x = valores.pop(0)
-                coordenada_y = valores.pop(0)
+                coordenada_x = int(valores.pop(0))
+                coordenada_y = int(valores.pop(0))
 
                 if coordenada_x != -1 and coordenada_y != -1:
-                    linha_metro.adicionar_estacoes(Vertice(int(coordenada_x), int(coordenada_y)))
+                    linha_metro.adicionar_estacoes(Vertice(coordenada_x, coordenada_y))
 
             linhas.append(linha_metro)
 
