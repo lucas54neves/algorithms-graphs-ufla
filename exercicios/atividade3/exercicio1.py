@@ -1,69 +1,74 @@
-class Vertice:
-    def __init__(self, indice):
-        self.indice = indice
-        self.adjacentes = []
-
-    def adicionar_aresta(self, adjacente):
-        self.adjacentes.append(adjacente)
-
 class Grafo:
     def __init__(self, nome_arquivo):
+        self.arestas = []
+        self.caminho = []
+        self.graus = []
+        self.n = 0
         self.ler_arquivo(nome_arquivo)
 
     def ler_arquivo(self, nome_arquivo):
-        # Abre o arquivo para leitura
         arquivo = open(nome_arquivo, 'r')
 
-        # Lista para armazenar os vertices do grafo
-        self.vertices = []
+        linha = arquivo.readline()
 
-        # Lista para armazenar o caminho euleriano
-        self.caminho_euleriano = []
+        self.n = int(linha)
 
         linha = arquivo.readline()
-        valores = linha.split()
 
-        # Variavel que armazena a quantidade de vertices do grafo
-        self.n = int(valores[0])
-
-        # Inicializa todos os vertices
-        for i in range(self.n):
-            self.vertices.append(Vertice(i))
-
-        linha = arquivo.readline()
         while linha:
             valores = linha.split()
 
-            # Adiciona todas as arestas do grafo
-            self.adicionar_aresta(int(valores[1]),int(valores[0]))
+            vertice1 = int(valores[0])
+            vertice2 = int(valores[1])
 
+            self.adicionar_aresta(vertice1, vertice2)
             linha = arquivo.readline()
 
     def adicionar_aresta(self, vertice1, vertice2):
-        self.vertices[vertice1].adicionar_aresta(vertice2)
-        self.vertices[vertice2].adicionar_aresta(vertice1)
+        self.arestas.append([vertice1, vertice2])
 
-    def remover_aresta(self, vertice1, vertice2):
-        self.vertices[vertice1].adjacentes.remove(vertice2)
-        self.vertices[vertice2].adjacentes.remove(vertice1)
+    def hierholzer(self, vertice):
+        for aresta in self.arestas:
+            if vertice == aresta[0]:
+                self.arestas.remove(aresta)
+                self.hierholzer(aresta[1])
+            elif vertice == aresta[1]:
+                self.arestas.remove(aresta)
+                self.hierholzer(aresta[0])
+        self.caminho.append(vertice)
 
     def imprimir_resultado(self):
-        i = len(self.caminho_euleriano) - 1
-        if self.caminho_euleriano[0] == self.caminho_euleriano[i]:
-            print(self.caminho_euleriano)
+        self.caminho.reverse()
+        retorno = ""
+        for vertice in self.caminho:
+            retorno += " " + str(vertice)
+        print(retorno)
+
+
+    def verificar_pares(self):
+        for i in range(self.n):
+            self.graus.append(0)
+
+        for i,j in self.arestas:
+            self.graus[i] += 1
+            self.graus[j] += 1
+
+        for i in self.graus:
+            if i % 2 == 1:
+                return False
+
+        return True
+
+    def algoritmo(self):
+        if self.verificar_pares():
+            self.hierholzer(0)
+            self.imprimir_resultado()
         else:
             print("Grafo Nao Euleriano")
 
-    def hierholzer(self, vertice):
-        for adjacente in self.vertices[vertice].adjacentes:
-            self.remover_aresta(vertice, adjacente)
-            self.hierholzer(adjacente)
-        self.caminho_euleriano.append(vertice)
-
 def main():
     grafo = Grafo("Ex1.txt")
-    grafo.hierholzer(0)
-    grafo.imprimir_resultado()
+    grafo.algoritmo()
 
 if __name__ == "__main__":
     main()
