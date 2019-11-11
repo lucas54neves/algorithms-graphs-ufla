@@ -27,10 +27,7 @@ class Grafo:
             for i in range(self.n):
                 for j in range(self.n):
                     if self.matriz[i][k] != 0 and self.matriz[k][j] != 0:
-                        self.matriz[i][j] += 1
-#int(grafo.get_matriz_adjacencia()[i][j] == 1
-#or (grafo.get_matriz_adjacencia()[i][k] == 1
-#and grafo.get_matriz_adjacencia()[k][j] == 1))
+                        self.matriz[i][j] += max(self.matriz[i][k], self.matriz[k][j])
 
     def imprimir_matriz(self):
         for i in range(len(self.matriz)):
