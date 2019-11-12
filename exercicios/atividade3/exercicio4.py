@@ -7,14 +7,16 @@ class Vertice:
         self.coordenada_y = coordenada_y
         self.tempo = float("inf")
         self.arestas = []
+        self.pai = None
 
     def adicionar_aresta(self, destino, tempo):
         self.arestas.append((destino, tempo))
 
     def relaxar_adjacentes(self):
         for destino, tempo in self.arestas:
-            if self.tempo > destino.tempo + tempo:
-                self.tempo = destino.tempo + tempo
+            if destino.tempo > self.tempo + tempo:
+                destino.tempo = self.tempo + tempo
+                destino.pai = self
 
 class Grafo:
     def __init__(self, nome_arquivo):
@@ -28,6 +30,8 @@ class Grafo:
         self.bellman_ford()
         # Imprime o resultado como pede o enunciado
         self.imprimir_resultado()
+        self.imprimir_tempos()
+        self.imprimir_caminho()
 
     def ler_arquivo(self, nome_arquivo):
         # Abre o arquivo
@@ -89,6 +93,19 @@ class Grafo:
 
     def imprimir_resultado(self):
         print(self.vertices[len(self.vertices) - 1].tempo)
+
+    def imprimir_tempos(self):
+        retorno = ""
+        for vertice in self.vertices:
+            retorno += str(vertice.tempo) + " "
+        print(retorno)
+
+    def imprimir_caminho(self):
+        pai = self.vertices[len(self.vertices) - 1]
+        print(pai.coordenada_x, pai.coordenada_y)
+        while pai != self.vertices[0]:
+            pai = pai.pai
+            print(pai.coordenada_x, pai.coordenada_y)
 
 def main():
     grafo = Grafo("Ex3.txt")
