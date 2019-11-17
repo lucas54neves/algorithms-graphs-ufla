@@ -30,8 +30,6 @@ class Grafo:
         self.bellman_ford()
         # Imprime o resultado como pede o enunciado
         self.imprimir_resultado()
-        self.imprimir_tempos()
-        self.imprimir_caminho()
 
     def ler_arquivo(self, nome_arquivo):
         # Abre o arquivo
@@ -72,15 +70,16 @@ class Grafo:
     def criar_arestas(self):
         for vertice1 in self.vertices:
             for vertice2 in self.vertices:
-                if vertice1.identificador == 0:
-                    vertice1.adicionar_aresta(vertice2, self.calcular_tempo(vertice1, vertice2, 1.7))
-                elif vertice1.identificador == vertice2.identificador:
-                    vertice1.adicionar_aresta(vertice2, self.calcular_tempo(vertice1, vertice2, 3.1111111111))
-                else:
-                    vertice1.adicionar_aresta(vertice2, self.calcular_tempo(vertice1, vertice2, 1.7))
+                if vertice1 != vertice2:
+                    if vertice1.identificador == 0:
+                        vertice1.adicionar_aresta(vertice2, self.calcular_tempo(vertice1, vertice2, 1.7))
+                    elif vertice1.identificador == vertice2.identificador:
+                        vertice1.adicionar_aresta(vertice2, self.calcular_tempo(vertice1, vertice2, 3.1111))
+                    else:
+                        vertice1.adicionar_aresta(vertice2, self.calcular_tempo(vertice1, vertice2, 1.7))
 
     def calcular_tempo(self, vertice1, vertice2, velocidade):
-        return math.ceil((self.calcular_distancia(vertice1, vertice2) // velocidade) // 60.0)
+        return math.ceil((self.calcular_distancia(vertice1, vertice2) / velocidade) / 60.0)
 
     def calcular_distancia(self, vertice1, vertice2):
         return math.sqrt(math.pow((vertice1.coordenada_x - vertice2.coordenada_x), 2) + math.pow((vertice1.coordenada_y - vertice2.coordenada_y), 2))
@@ -93,19 +92,6 @@ class Grafo:
 
     def imprimir_resultado(self):
         print(self.vertices[len(self.vertices) - 1].tempo)
-
-    def imprimir_tempos(self):
-        retorno = ""
-        for vertice in self.vertices:
-            retorno += str(vertice.tempo) + " "
-        print(retorno)
-
-    def imprimir_caminho(self):
-        pai = self.vertices[len(self.vertices) - 1]
-        print(pai.coordenada_x, pai.coordenada_y)
-        while pai != self.vertices[0]:
-            pai = pai.pai
-            print(pai.coordenada_x, pai.coordenada_y)
 
 def main():
     grafo = Grafo("Ex3.txt")
